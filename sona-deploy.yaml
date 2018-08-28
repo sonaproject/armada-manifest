@@ -16,6 +16,23 @@ data:
   sequenced: False
   chart_group:
     - sona-chart
+    - ovs-chart
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: helm-toolkit
+data:
+  chart_name: helm-toolkit
+  release: helm-toolkit
+  namespace: helm-tookit
+  values: {}
+  source:
+    type: git
+    location: https://tde.sktelecom.com/stash/scm/openstack/openstack-helm-infra
+    subpath: helm-toolkit
+    reference: master
+  dependencies: []
 ---
 schema: armada/Chart/v1
 metadata:
@@ -47,3 +64,36 @@ data:
     subpath: sona
     reference: master
   dependencies: []
+---
+  schema: armada/Chart/v1
+  metadata:
+    schema: metadata/Document/v1
+    name: ovs-chart
+  data:
+    chart_name: sona-helm
+    release: ovs
+    namespace: default
+    wait:
+      timeout: 100
+    protected:
+      continue_processing: false
+    test:
+      enabled: true
+    install:
+      no_hooks: false
+    upgrade:
+      no_hooks: false
+    values:
+      labels:
+        ovs:
+          node_selector_key: nodetype
+          node_selector_value: compute
+      sona:
+        node_type: COMPUTE
+    source:
+      type: git
+      location: https://tde.sktelecom.com/stash/scm/cloudvim/sona-helm
+      subpath: openvswitch
+      reference: master
+    dependencies:
+      - helm-toolkit
