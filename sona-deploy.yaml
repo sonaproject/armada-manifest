@@ -1,0 +1,49 @@
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: sona-manifest
+data:
+  release_prefix: sona
+  chart_groups:
+    - sona-services
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: sona-services
+data:
+  description: Deploys SONA Service
+  sequenced: False
+  chart_group:
+    - sona-chart
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: sona-chart
+data:
+  chart_name: sona-helm
+  release: sona
+  namespace: default
+  wait:
+    timeout: 100
+  protected:
+    continue_processing: false
+  test:
+    enabled: true
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+  values: 
+    onos:
+      node_selector:
+        key: nodetype
+        value: control
+      hostNetwork: true
+  source:
+    type: git
+    location: https://tde.sktelecom.com/stash/scm/cloudvim/sona-helm
+    subpath: sona
+    reference: master
+  dependencies: []
