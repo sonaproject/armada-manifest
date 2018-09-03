@@ -56,14 +56,14 @@ data:
   values: 
     onos:
       node_selector:
-        key: nodetype
-        value: control
+        key: openstack-control-plane
+        value: enabled
       hostNetwork: true
     openstack:
       keystone:
-        endpoint: 10.1.1.12/identity/v3
+        endpoint: keystone/v3
         version: v3
-      password: nova
+      password: password
   source:
     type: git
     location: https://tde.sktelecom.com/stash/scm/cloudvim/sona-helm
@@ -92,8 +92,8 @@ data:
     values:
       labels:
         ovs:
-          node_selector_key: nodetype
-          node_selector_value: compute
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
       sona:
         node_type: COMPUTE
     source:
