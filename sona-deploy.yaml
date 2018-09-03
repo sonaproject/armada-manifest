@@ -17,6 +17,7 @@ data:
   chart_group:
     - sona-chart
     - ovs-chart
+    - gw-ovs-chart
 ---
 schema: armada/Chart/v1
 metadata:
@@ -58,6 +59,11 @@ data:
         key: nodetype
         value: control
       hostNetwork: true
+    openstack:
+      keystone:
+        endpoint: 10.1.1.12/identity/v3
+        version: v3
+      password: nova
   source:
     type: git
     location: https://tde.sktelecom.com/stash/scm/cloudvim/sona-helm
@@ -90,6 +96,40 @@ data:
           node_selector_value: compute
       sona:
         node_type: COMPUTE
+    source:
+      type: git
+      location: https://tde.sktelecom.com/stash/scm/cloudvim/sona-helm
+      subpath: openvswitch
+      reference: master
+    dependencies:
+      - helm-toolkit
+---
+  schema: armada/Chart/v1
+  metadata:
+    schema: metadata/Document/v1
+    name: gw-ovs-chart
+  data:
+    chart_name: sona-helm
+    release: gw-ovs
+    namespace: default
+    wait:
+      timeout: 100
+    protected:
+      continue_processing: false
+    test:
+      enabled: true
+    install:
+      no_hooks: false
+    upgrade:
+      no_hooks: false
+    values:
+      labels:
+        ovs:
+          node_selector_key: nodetype
+          node_selector_value: gateway
+      sona:
+        node_type: GATEWAY
+        uplink_port: router
     source:
       type: git
       location: https://tde.sktelecom.com/stash/scm/cloudvim/sona-helm
